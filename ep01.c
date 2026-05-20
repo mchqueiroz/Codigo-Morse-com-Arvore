@@ -93,7 +93,11 @@ int main(){
     printf("Digite o texto ou codigo Morse para processar: ");
 
     if(fgets(entrada, sizeof(entrada), stdin) != NULL) {
-        char* token = strtok(entrada, " / "); 
+        // Remove a quebra de linha do final da string
+        entrada[strcspn(entrada, "\n\r")] = '\0';
+
+        // Usa APENAS o espaço como delimitador inicial
+        char* token = strtok(entrada, " "); 
         int index = 0;
 
         printf("\nResultado da Traducao: ");
@@ -101,14 +105,27 @@ int main(){
         while(token != NULL && index < 50) {
             tk[index] = token; 
             
-            char letraTraduzida = buscarArvore(tree, tk[index]);
-            printf("%c", letraTraduzida);
+            // Se o token for a barra, significa que terminou uma palavra.
+            // Em vez de buscar na árvore, apenas imprimimos um espaço no texto normal.
+            if (strcmp(tk[index], "/") == 0) {
+                printf(" "); 
+            } else {
+                // Caso contrário, busca normalmente a sequência Morse na árvore
+                char letraTraduzida = buscarArvore(tree, tk[index]);
+                
+                if (letraTraduzida != '\0') {
+                    printf("%c", letraTraduzida);
+                } else {
+                    printf("?"); // Código inválido
+                }
+            }
 
             index++;
-            token = strtok(NULL, " \n");
+            token = strtok(NULL, " "); // Continua usando estritamente o espaço
         }
         printf("\n");
-    }
 
+    }
     return 0;
+
 }
