@@ -13,7 +13,7 @@ struct node{
 link criarNo() {
     link novo = (link)malloc(sizeof(struct node));
     if (novo != NULL) {
-        novo->key = '\0'; // Inicializa vazio (nó de passagem)
+        novo->key = '\0';
         novo->left = NULL;
         novo->right = NULL;
     }
@@ -44,47 +44,25 @@ link inserirArvore(link raiz, char valor, const char* codigoMorse){
     return raiz; 
 }
 
-char buscarMorse(link raiz, const char* codigoMorse){
+char buscarArvore(link raiz, const char* codigoMorse){
     link atual = raiz;
 
-    char letraTraduzida = '\0'; // Inicializa a letra traduzida como vazio
-
-    for (const char* p = codigoMorse; *p != '\0'; p++) {
-        if (*p == '.') {
+    for (const char* p = codigoMorse; *p != '\0'; p++) {// Percorre cada caractere do código Morse
+        if (*p == '.') {// Se o caractere for '.', move para a subárvore esquerda
             if (atual->left == NULL) {
                 return '\0'; // Código Morse inválido
             }
             atual = atual->left;
-        } else if (*p == '-') {
+        } else if (*p == '-') {// Se o caractere for '-', move para a subárvore direita
             if (atual->right == NULL) {
                 return '\0'; // Código Morse inválido
             }
             atual = atual->right;
         }
     }
-    letraTraduzida = atual->key;
-    if (letraTraduzida != '\0') {
-        printf("%c", letraTraduzida);
-    } else {
-        printf("?"); // Mostra uma interrogação para códigos Morse inválidos
-    }
-    return letraTraduzida;
-
-    for (const char* p = codigoMorse; *p != '\0'; p++) {
-        if (*p == '.') {
-            if (atual->left == NULL) {
-                return '\0'; // Código Morse inválido
-            }
-            atual = atual->left;
-        } else if (*p == '-') {
-            if (atual->right == NULL) {
-                return '\0'; // Código Morse inválido
-            }
-            atual = atual->right;
-        }
-    }
-    return atual->key;
+    return atual->key; // Retorna a letra correspondente ao código Morse
 }
+
 
 int main(){
     char linha[256];// Buffer para ler linhas do arquivo
@@ -102,6 +80,7 @@ int main(){
         tk[i] = NULL;
     }
  
+    // Lê o arquivo linha por linha, extrai a letra e o código Morse, e insere na árvore
     while(fgets(linha, sizeof(linha), arquivo)){// Lê cada linha do arquivo
         if (sscanf(linha, " %c %s", &letra, codigo) == 2) {// Extrai a letra e o código Morse da linha
             printf("Lido: %c -> %s\n", letra, codigo);// Imprime a letra e o código Morse lidos para verificação
@@ -114,18 +93,19 @@ int main(){
     printf("Digite o texto ou codigo Morse para processar: ");
 
     if(fgets(entrada, sizeof(entrada), stdin) != NULL) {
-        char* token = strtok(entrada, " \n");// Tokeniza a entrada usando espaço e nova linha como delimitadores
-        int index = 0;// Índice para armazenar os tokens na array de ponteiros
+        char* token = strtok(entrada, " / "); 
+        int index = 0;
 
+        printf("\nResultado da Traducao: ");
+        
         while(token != NULL && index < 50) {
-            tk[index++] = token;// Armazena o token na array de ponteiros
-            token = strtok(NULL, " \n");// Continua tokenizando a entrada
-        }
-
-         printf("\nResultado da Tradução: ");
-        for(int i = 0; i < index; i++) {
-            char letraTraduzida = buscarMorse(tree, tk[i]);
+            tk[index] = token; 
+            
+            char letraTraduzida = buscarArvore(tree, tk[index]);
             printf("%c", letraTraduzida);
+
+            index++;
+            token = strtok(NULL, " \n");
         }
         printf("\n");
     }
