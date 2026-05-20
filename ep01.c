@@ -42,7 +42,7 @@ link inserirArvore(link raiz, char valor, const char* codigoMorse){
             atual = atual->right;
         }
     }
-    atual->key = valor; // Atribui o caractere ao nó final
+    atual->key = valor;
     return raiz; 
 }
 
@@ -52,11 +52,20 @@ int main(){
     char linha[256];
     FILE *arquivo = fopen("morse.txt", "r");;
 
-    while(fgets(linha, sizeof(linha), arquivo)){
-        printf("Conteúdo lido: %s", linha);
-        tree = inserirArvore(tree, linha[0], linha + 2); // Considerando que cada linha contém um único caractere e o código morse começa na terceira posição
+    tree = criarNo();
 
+    char letra;
+    char codigo[50];
+
+    while(fgets(linha, sizeof(linha), arquivo)){
+        if (sscanf(linha, " %c %s", &letra, codigo) == 2) {
+            printf("Lido: %c -> %s\n", letra, codigo);
+            tree = inserirArvore(tree, letra, codigo);
+        }
     }
+
+    fclose(arquivo);
 
     return 0;
 }
+
