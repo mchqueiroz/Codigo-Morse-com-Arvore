@@ -1,4 +1,4 @@
-##################################################################### Código Morse com Árvore #####################################################################
+## Código Morse com Árvore ##
 
 ## DESCRIÇÃO : Programa baseado em árvore binária de busca que armazena, pesquisa e traduz código morse para símbolos alfanuméricos, e vice-versa.
 
